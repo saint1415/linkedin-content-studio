@@ -636,6 +636,53 @@ function addCurrentToQueue() {
   }
 }
 
+function showExportOptions() {
+  showModal('export-modal', `
+    <h3>Export Queue</h3>
+    <p>Export your scheduled posts for use with external scheduling tools.</p>
+    <div class="action-buttons" style="flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+      <button onclick="window.app.exportQueue('csv')" class="btn btn-primary" style="width: 100%;">
+        Export as CSV (Hootsuite compatible)
+      </button>
+      <button onclick="window.app.exportQueue('json')" class="btn btn-secondary" style="width: 100%;">
+        Export as JSON
+      </button>
+      <button onclick="window.app.exportQueue('buffer')" class="btn btn-secondary" style="width: 100%;">
+        Export for Buffer
+      </button>
+    </div>
+    <div class="modal-actions">
+      <button onclick="window.app.closeModal()">Close</button>
+    </div>
+  `);
+}
+
+function showSuggestedTimes() {
+  const suggestions = suggestNextPostTime(contentQueue.getQueue());
+
+  if (!suggestions.length) {
+    showNotification('No suggested times available', 'error');
+    return;
+  }
+
+  showModal('times-modal', `
+    <h3>Suggested Posting Times</h3>
+    <p>Based on optimal LinkedIn engagement times:</p>
+    <div class="time-suggestions" style="margin-top: 1rem;">
+      ${suggestions.slice(0, 10).map(s => `
+        <div class="time-suggestion ${s.quality}" style="display: flex; justify-content: space-between; padding: 0.75rem; margin-bottom: 0.5rem; background: var(--bg-tertiary); border-radius: var(--radius);">
+          <span><strong>${s.dayName}</strong> at ${s.timeStr}</span>
+          <span class="quality-badge" style="background: ${s.quality === 'high' ? 'var(--success)' : 'var(--warning)'}; padding: 0.25rem 0.5rem; border-radius: 4px;">${s.quality}</span>
+        </div>
+      `).join('')}
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">${suggestions[0]?.note || ''}</p>
+    <div class="modal-actions">
+      <button onclick="window.app.closeModal()">Close</button>
+    </div>
+  `);
+}
+
 // URL Parser
 function initUrlParser() {
   document.getElementById('parse-urls')?.addEventListener('click', parseUrls);
@@ -908,6 +955,13 @@ window.app = {
         showNotification('Added to queue!');
       }
     }
+  },
+
+  exportQueue: (format) => {
+    const exportData = exportForScheduler(format);
+    downloadExport(exportData);
+    closeModal();
+    showNotification(`Exported as ${format.toUpperCase()}`);
   }
 };
 
