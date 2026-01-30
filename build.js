@@ -36,16 +36,27 @@ dataFiles.forEach(file => {
 moduleFiles.forEach(file => {
   console.log('Processing:', file);
   let content = fs.readFileSync(file, 'utf8');
+  // Remove single-line imports
   content = content.replace(/^import .* from .*$/gm, '');
+  // Remove multi-line imports (import { ... } from '...')
+  content = content.replace(/^import\s*\{[\s\S]*?\}\s*from\s*['"][^'"]*['"];?\s*$/gm, '');
+  // Remove export keywords
   content = content.replace(/^export /gm, '');
-  content = content.replace(/^export default .*$/gm, '');
+  // Remove export default blocks (multi-line)
+  content = content.replace(/^export default\s*\{[\s\S]*?\};?\s*$/gm, '');
+  // Remove any remaining standalone 'default' keyword
+  content = content.replace(/^default\s*\{[\s\S]*?\};?\s*$/gm, '');
   bundledJS += `// === ${file} ===\n${content}\n\n`;
 });
 
 // Process main app.js
 console.log('Processing: js/app.js');
 let appContent = fs.readFileSync('js/app.js', 'utf8');
+// Remove single-line imports
 appContent = appContent.replace(/^import .* from .*$/gm, '');
+// Remove multi-line imports
+appContent = appContent.replace(/^import\s*\{[\s\S]*?\}\s*from\s*['"][^'"]*['"];?\s*$/gm, '');
+// Convert exports to regular declarations
 appContent = appContent.replace(/^export function /gm, 'function ');
 appContent = appContent.replace(/^export const /gm, 'const ');
 appContent = appContent.replace(/^export default [\s\S]*?^\};$/gm, '');

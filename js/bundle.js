@@ -2035,17 +2035,6 @@ const dataTransfer = {
 // Human-like writing analyzer and improver
 // Helps content pass AI detection and sound natural
 
-import {
-  AI_RED_FLAGS,
-  HUMAN_ALTERNATIVES,
-  OVERUSED_OPENERS,
-  WEAK_WORDS,
-  SENTENCE_PATTERNS_TO_AVOID,
-  LINKEDIN_CRINGE,
-  DETECTION_SCORING,
-  HUMAN_WRITING_TIPS,
-  AUTHENTICITY_SIGNALS
-} from '../data/phrases.js';
 
 // Analyze text for AI detection risk
 function analyzeText(text) {
@@ -2332,14 +2321,6 @@ function scoreHook(hookText) {
 }
 
 // Export for use in UI
-default {
-  analyzeText,
-  humanizeText,
-  getRandomTip,
-  getAuthenticitySuggestions,
-  checkOpener,
-  scoreHook
-};
 
 
 // === js/modules/post-scorer.js ===
@@ -2689,10 +2670,6 @@ function estimateEngagement(score, followerCount = 1000) {
   };
 }
 
-default {
-  scorePost,
-  estimateEngagement
-};
 
 
 // === js/modules/scheduler.js ===
@@ -3022,14 +2999,6 @@ function checkConflicts(scheduledDate, existingQueue) {
   return conflicts;
 }
 
-default {
-  contentQueue,
-  suggestNextPostTime,
-  exportForScheduler,
-  downloadExport,
-  autoSchedulePosts,
-  checkConflicts
-};
 
 
 // === js/modules/url-parser.js ===
@@ -3408,11 +3377,6 @@ async function parseMultipleUrls(urls, onProgress) {
   return results;
 }
 
-default {
-  parseUrl,
-  parseMultipleUrls,
-  generatePostFromArticle
-};
 
 
 // === js/app.js ===
