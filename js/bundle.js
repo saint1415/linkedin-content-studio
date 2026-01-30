@@ -4330,10 +4330,7 @@ window.app = {
 };
 
 // Export for module usage
-default {
-  initApp,
-  state
-};
+
 
 
 

@@ -38,7 +38,7 @@ moduleFiles.forEach(file => {
   let content = fs.readFileSync(file, 'utf8');
   content = content.replace(/^import .* from .*$/gm, '');
   content = content.replace(/^export /gm, '');
-  content = content.replace(/export default .*/gm, '');
+  content = content.replace(/^export default .*$/gm, '');
   bundledJS += `// === ${file} ===\n${content}\n\n`;
 });
 
@@ -46,8 +46,9 @@ moduleFiles.forEach(file => {
 console.log('Processing: js/app.js');
 let appContent = fs.readFileSync('js/app.js', 'utf8');
 appContent = appContent.replace(/^import .* from .*$/gm, '');
-appContent = appContent.replace(/^export /gm, '');
-appContent = appContent.replace(/export default .*/gm, '');
+appContent = appContent.replace(/^export function /gm, 'function ');
+appContent = appContent.replace(/^export const /gm, 'const ');
+appContent = appContent.replace(/^export default [\s\S]*?^\};$/gm, '');
 bundledJS += `// === js/app.js ===\n${appContent}\n\n`;
 
 // Add initialization
