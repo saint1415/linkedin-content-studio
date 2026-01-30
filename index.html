@@ -1,39 +1,449 @@
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LinkedIn Content Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-blue': '#0A66C2',
-              'brand-dark': '#1D2226',
-              'brand-light': '#F3F2EF',
-            },
-          },
-        },
-      }
-    </script>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
-    "react/": "https://esm.sh/react@^19.1.0/",
-    "react": "https://esm.sh/react@^19.1.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.10.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free LinkedIn Content Studio - Create engaging posts, generate hooks, schedule content, and optimize for the algorithm. No API required.">
+  <meta name="keywords" content="LinkedIn, content creator, post generator, hooks, hashtags, scheduler, algorithm">
+  <title>LinkedIn Content Studio - Create Viral LinkedIn Posts</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230a66c2'><path d='M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.75c0-1.4-1.1-2.5-2.5-2.5S11 12.85 11 14.25V19h-3v-9h2.9v1.3a3.11 3.11 0 012.8-1.55C16.4 9.75 19 11.9 19 15.5z'/></svg>">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-  <body class="bg-gray-900 text-white">
-    <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+<body>
+  <!-- Tip Bar -->
+  <div class="tip-bar">
+    <strong>💡 Tip:</strong>
+    <span id="tip-of-day">Loading tip...</span>
+  </div>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.75c0-1.4-1.1-2.5-2.5-2.5S11 12.85 11 14.25V19h-3v-9h2.9v1.3a3.11 3.11 0 012.8-1.55C16.4 9.75 19 11.9 19 15.5z"/>
+        </svg>
+        <h1>Content Studio</h1>
+      </div>
+
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-section-title">Create</li>
+          <li class="nav-item">
+            <a class="nav-link active" data-tab="compose">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Compose
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="hooks">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Hook Generator
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="templates">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+              </svg>
+              Templates
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="hashtags">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+              </svg>
+              Hashtag Tool
+            </a>
+          </li>
+
+          <li class="nav-section-title">Plan</li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="scheduler">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Scheduler
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="url-parser">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              URL Parser
+            </a>
+          </li>
+
+          <li class="nav-section-title">Learn</li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="algorithm">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              Algorithm Guide
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="best-times">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Best Times
+            </a>
+          </li>
+
+          <li class="nav-section-title">Settings</li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="settings">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Settings
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Compose Tab -->
+      <div id="tab-compose" class="tab-content active">
+        <div class="content-header">
+          <h2>Compose Post</h2>
+          <p>Write your LinkedIn post and get real-time feedback on engagement potential.</p>
+        </div>
+
+        <div class="composer-grid">
+          <div class="composer-main">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Write Your Post</h3>
+                <span id="char-count" class="char-counter">0 / 3000</span>
+              </div>
+
+              <textarea id="post-content" class="post-textarea" placeholder="Start writing your LinkedIn post...
+
+Tips for a great post:
+• Start with a hook that stops the scroll
+• Use line breaks for readability
+• Include specific numbers and details
+• End with a question or call-to-action
+• Keep hashtags to 3-5"></textarea>
+
+              <div class="form-group">
+                <label>Hashtags</label>
+                <div class="hashtag-input-group">
+                  <input type="text" id="hashtag-input" placeholder="Add hashtag (without #)">
+                  <button id="add-hashtag" class="btn btn-secondary">Add</button>
+                </div>
+                <div id="hashtag-list" class="hashtag-list"></div>
+              </div>
+
+              <div class="form-group">
+                <label>Media Attachments</label>
+                <div class="media-options">
+                  <label class="media-option">
+                    <input type="checkbox" id="has-image"> Image
+                  </label>
+                  <label class="media-option">
+                    <input type="checkbox" id="has-video"> Video (+69% boost)
+                  </label>
+                  <label class="media-option">
+                    <input type="checkbox" id="has-document"> Document/Carousel
+                  </label>
+                  <label class="media-option">
+                    <input type="checkbox" id="has-link"> External Link (-40% reach)
+                  </label>
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button id="copy-post" class="btn btn-primary">Copy to Clipboard</button>
+                <button id="save-draft" class="btn btn-secondary">Save Draft</button>
+                <button id="add-to-queue" class="btn btn-secondary">Add to Queue</button>
+                <button id="humanize-post" class="btn btn-secondary">Humanize Text</button>
+                <button id="clear-post" class="btn btn-secondary">Clear</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Preview</h3>
+              <div id="post-preview" class="preview-panel">
+                <span class="placeholder">Your post preview will appear here...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-panel">
+            <div class="card">
+              <h3 class="card-title">Engagement Score</h3>
+              <div class="score-display">
+                <div class="score-item">
+                  <div id="post-score" class="score-value">0</div>
+                  <div class="score-label">Post Score</div>
+                </div>
+                <div class="score-item">
+                  <div id="post-grade" class="grade-badge">-</div>
+                  <div class="score-label">Grade</div>
+                </div>
+                <div class="score-item">
+                  <div id="human-score" class="score-value">0</div>
+                  <div class="score-label">Human Score</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Issues</h3>
+              <ul id="issues-list" class="issues-list">
+                <li class="placeholder">Start writing to see analysis...</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Suggestions</h3>
+              <ul id="suggestions-list" class="suggestions-list">
+                <li class="placeholder">Suggestions will appear here...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hook Generator Tab -->
+      <div id="tab-hooks" class="tab-content">
+        <div class="content-header">
+          <h2>Hook Generator</h2>
+          <p>Powerful opening lines that stop the scroll and grab attention.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-group">
+            <label for="hook-category">Filter by Category</label>
+            <select id="hook-category"></select>
+          </div>
+        </div>
+
+        <div id="hook-list" class="hook-grid"></div>
+      </div>
+
+      <!-- Templates Tab -->
+      <div id="tab-templates" class="tab-content">
+        <div class="content-header">
+          <h2>Post Templates</h2>
+          <p>Proven post structures that drive engagement.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-group">
+            <label for="template-category">Select Category</label>
+            <select id="template-category"></select>
+          </div>
+        </div>
+
+        <div id="template-list" class="template-grid"></div>
+      </div>
+
+      <!-- Hashtag Tool Tab -->
+      <div id="tab-hashtags" class="tab-content">
+        <div class="content-header">
+          <h2>Hashtag Research</h2>
+          <p>Find the best hashtags for your niche and industry.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-group">
+            <label for="hashtag-category">Select Industry/Topic</label>
+            <select id="hashtag-category"></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Hashtags</h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Click a hashtag to add it to your current post.</p>
+          <div id="hashtag-results" class="hashtag-grid"></div>
+        </div>
+      </div>
+
+      <!-- Scheduler Tab -->
+      <div id="tab-scheduler" class="tab-content">
+        <div class="content-header">
+          <h2>Content Scheduler</h2>
+          <p>Plan and schedule your content for optimal posting times.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">This Week</h3>
+            <div class="action-buttons">
+              <button id="suggest-times" class="btn btn-secondary">Suggest Times</button>
+              <button id="export-queue" class="btn btn-secondary">Export for Buffer/Hootsuite</button>
+            </div>
+          </div>
+          <div id="calendar-view"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Content Queue</h3>
+          <div id="queue-list" class="queue-list">
+            <p class="empty">No posts scheduled. Create a post and add it to your queue.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- URL Parser Tab -->
+      <div id="tab-url-parser" class="tab-content">
+        <div class="content-header">
+          <h2>URL Content Parser</h2>
+          <p>Extract content from articles and generate LinkedIn posts automatically.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-group">
+            <label>Paste URLs (one per line)</label>
+            <textarea id="url-list" class="url-textarea" placeholder="https://example.com/article-1
+https://example.com/article-2
+https://example.com/article-3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="post-style">Post Style</label>
+            <select id="post-style">
+              <option value="insight">Key Insight</option>
+              <option value="summary">Summary</option>
+              <option value="question">Question/Discussion</option>
+              <option value="story">Story Connection</option>
+            </select>
+          </div>
+
+          <div class="action-buttons">
+            <button id="parse-urls" class="btn btn-primary">Parse URLs</button>
+            <button id="generate-from-urls" class="btn btn-secondary">Generate Posts</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Parsed Articles</h3>
+          <div id="parsed-results">
+            <p class="placeholder">Parsed articles will appear here...</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Generated Posts</h3>
+          <div id="generated-posts">
+            <p class="placeholder">Generated posts will appear here...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Algorithm Guide Tab -->
+      <div id="tab-algorithm" class="tab-content">
+        <div class="content-header">
+          <h2>LinkedIn Algorithm Guide</h2>
+          <p>Understand how the algorithm works and optimize your content.</p>
+        </div>
+
+        <div id="algorithm-guide" class="card"></div>
+      </div>
+
+      <!-- Best Times Tab -->
+      <div id="tab-best-times" class="tab-content">
+        <div class="content-header">
+          <h2>Best Times to Post</h2>
+          <p>Maximize your reach by posting when your audience is most active.</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">General Best Times</h3>
+          <p><strong>Peak Days:</strong> Tuesday, Wednesday, Thursday</p>
+          <p><strong>Peak Hours:</strong> 7-8 AM, 12 PM, 5-6 PM (audience timezone)</p>
+          <p><strong>Avoid:</strong> Weekends, Friday afternoons, late nights</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">By Day of Week</h3>
+          <table class="format-table">
+            <thead>
+              <tr><th>Day</th><th>Quality</th><th>Best Times</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Monday</td><td>Medium</td><td>8 AM, 12 PM</td><td>People catching up</td></tr>
+              <tr><td>Tuesday</td><td style="color: var(--success)">High</td><td>7-8 AM, 12 PM, 5-6 PM</td><td>Peak engagement - use best content</td></tr>
+              <tr><td>Wednesday</td><td style="color: var(--success)">High</td><td>7-8 AM, 12 PM, 5-6 PM</td><td>Strong mid-week engagement</td></tr>
+              <tr><td>Thursday</td><td style="color: var(--success)">High</td><td>7-8 AM, 12 PM, 5-6 PM</td><td>Last peak day before weekend drop</td></tr>
+              <tr><td>Friday</td><td>Medium-Low</td><td>7-8 AM, 12 PM</td><td>Morning only - drops after lunch</td></tr>
+              <tr><td>Saturday</td><td style="color: var(--warning)">Low</td><td>9-10 AM</td><td>Significantly lower engagement</td></tr>
+              <tr><td>Sunday</td><td style="color: var(--warning)">Low</td><td>4-5 PM</td><td>Evening prep can work</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Posting Frequency</h3>
+          <p><strong>Optimal:</strong> 2-3 posts per week</p>
+          <p><strong>Maximum:</strong> 1 post per day</p>
+          <p><strong>Minimum Spacing:</strong> 18-24 hours between posts</p>
+          <p style="color: var(--warning)"><strong>Warning:</strong> Multiple posts in 24 hours = second post gets penalized</p>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="tab-settings" class="tab-content">
+        <div class="content-header">
+          <h2>Settings</h2>
+          <p>Customize your LinkedIn Content Studio experience.</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Appearance</h3>
+          <div class="form-group">
+            <label class="media-option">
+              <input type="checkbox" id="theme-toggle"> Light Mode
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Data Management</h3>
+          <p style="margin-bottom: 1rem;">Export your drafts, queue, and settings or import from a backup.</p>
+          <div class="action-buttons">
+            <button id="export-data" class="btn btn-secondary">Export All Data</button>
+            <button id="import-data" class="btn btn-secondary">Import Data</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">About</h3>
+          <p><strong>LinkedIn Content Studio v1.0</strong></p>
+          <p>A free tool for creating engaging LinkedIn content.</p>
+          <p>No API required. Your data stays in your browser.</p>
+          <p style="margin-top: 1rem; color: var(--text-muted);">
+            Built with algorithm research from Hootsuite, Buffer, Sprout Social, and Richard van der Blom.
+          </p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- App Script -->
+  <script type="module">
+    import { initApp } from './js/app.js';
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
 </body>
 </html>
