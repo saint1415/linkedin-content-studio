@@ -13,7 +13,7 @@ import { drafts, calendar, settings, history, profile, analytics, dataTransfer }
 import { parseUrl, parseMultipleUrls, generatePostFromArticle } from './modules/url-parser.js';
 import { contentQueue, suggestNextPostTime, exportForScheduler, downloadExport, autoSchedulePosts, checkConflicts } from './modules/scheduler.js';
 
-// App State
+// App State - initialize lazily to avoid errors at module load time
 const state = {
   currentTab: 'compose',
   currentPost: {
@@ -24,14 +24,20 @@ const state = {
     hasDocument: false,
     hasLink: false
   },
-  settings: settings.get(),
-  drafts: drafts.getAll(),
-  queue: contentQueue.getQueue()
+  settings: null,
+  drafts: [],
+  queue: []
 };
 
 // Initialize App
 export function initApp() {
-  console.log('LinkedIn Content Studio initializing...');
+  try {
+    console.log('LinkedIn Content Studio initializing...');
+
+    // Initialize state now that DOM is ready
+    state.settings = settings.get();
+    state.drafts = drafts.getAll();
+    state.queue = contentQueue.getQueue();
 
   // Load saved settings
   state.settings = settings.get();
@@ -53,6 +59,16 @@ export function initApp() {
   showTip();
 
   console.log('LinkedIn Content Studio ready!');
+  } catch (error) {
+    console.error('Error initializing app:', error);
+    // Show error to user
+    document.body.innerHTML = `<div style="padding: 2rem; color: white; background: #1b1f23;">
+      <h1>Error Loading App</h1>
+      <p>There was an error loading LinkedIn Content Studio.</p>
+      <pre style="background: #2d333b; padding: 1rem; border-radius: 8px; overflow: auto;">${error.message}\n${error.stack}</pre>
+      <p>Please refresh the page or check the console for more details.</p>
+    </div>`;
+  }
 }
 
 // Navigation

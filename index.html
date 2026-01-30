@@ -443,7 +443,19 @@ https://example.com/article-3"></textarea>
   <!-- App Script -->
   <script type="module">
     import { initApp } from './js/app.js';
-    document.addEventListener('DOMContentLoaded', initApp);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+  </script>
+  <script>
+    // Fallback error handler for module loading failures
+    window.onerror = function(msg, url, line, col, error) {
+      console.error('Global error:', msg, url, line);
+      document.body.innerHTML = '<div style="padding: 2rem; color: white; background: #1b1f23;"><h1>Error Loading</h1><p>' + msg + '</p></div>';
+    };
   </script>
 </body>
 </html>
