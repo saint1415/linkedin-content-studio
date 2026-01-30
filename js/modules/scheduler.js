@@ -1,7 +1,8 @@
 // Content Scheduler - Queue and export posts for scheduling
 
 import { calendar, drafts } from './storage.js';
-import { OPTIMAL_POSTING, TIMES_BY_DAY } from '../data/timing.js';
+import { TIMES_BY_DAY } from '../data/timing.js';
+import { OPTIMAL_POSTING } from '../data/algorithm.js';
 
 // Content queue management
 export const contentQueue = {
